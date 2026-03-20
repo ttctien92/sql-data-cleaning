@@ -6,7 +6,6 @@ This is an educational project on data cleaning and preparation using SQL. The o
 
 View first 10 rows
 
-```sql
 SELECT *
 FROM club_member_info
 LIMIT 10;
