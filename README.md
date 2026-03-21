@@ -9,8 +9,7 @@ View first 10 rows
 '''sql
 SELECT *
 FROM club_member_info
-LIMIT 10;
-'''
+LIMIT 10;'''
 
 Result:
 |full_name|age|martial_status|email|phone|full_address|job_title|membership_date|
@@ -41,8 +40,8 @@ CREATE TABLE club_member_info_cleaned (
     full_address VARCHAR(50),
     job_title VARCHAR(50),
     membership_date VARCHAR(50)
-);
-'''
+);'''
+
 
 ### Copy all values from original table
 ```sql
