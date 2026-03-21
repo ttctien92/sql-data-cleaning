@@ -75,3 +75,152 @@ Result:
 |mendie alexandrescu|
 |fey kloss|
 
+```sql
+SELECT UPPER(full_name)
+FROM club_member_info_cleaned
+```
+
+```sql
+UPDATE club_member_info_cleaned
+SET full_name = UPPER(full_name)
+```
+
+Result:
+|full_name|
+|---------|
+|ADDIE LUSH|
+|ROCK CRADICK|
+|SYDEL SHARVELL|
+|CONSTANTIN DE LA CRUZ|
+|GAYLOR REDHOLE|
+|WANDA DEL MAR|
+|JOANN KENEALY|
+|JOETE CUDIFF|
+|MENDIE ALEXANDRESCU|
+|FEY KLOSS|
+
+
+### Age
+
+```sql
+SELECT DISTINCT age
+FROM club_member_info_cleaned cmic
+ORDER BY age
+```
+
+```sql
+SELECT CAST(SUBSTR(age, 1, 2) AS INTEGER)
+FROM club_member_info_cleaned
+WHERE age > 100
+AND age <> ''
+ORDER BY age
+```
+
+```sql
+UPDATE club_member_info_cleaned
+SET age = CAST(SUBSTR(age, 1, 2) AS INTEGER)
+WHERE age > 100 and age <> ''
+```
+
+```sql
+SELECT ROUND(AVG(age),0)
+FROM club_member_info_cleaned
+```
+
+```sql
+SELECT age
+FROM club_member_info_cleaned
+WHERE age = ''
+ORDER BY age
+```
+
+```sql
+UPDATE club_member_info_cleaned
+SET age = (SELECT ROUND(AVG(age),0)
+FROM club_member_info_cleaned)
+WHERE age = ''
+```
+
+```sql
+UPDATE club_member_info_cleaned
+SET age = (
+    SELECT ROUND(AVG(age))
+    FROM club_member_info_cleaned
+    WHERE age BETWEEN 0 AND 100
+)
+WHERE age IS NULL
+   OR age < 0
+   OR age > 100;
+```
+
+```sql
+SELECT MIN(age), MAX(age)
+FROM club_member_info_cleaned;
+```
+
+### Martial Status
+
+```sql
+SELECT DISTINCT martial_status
+FROM club_member_info_cleaned;
+```
+
+```sql
+UPDATE club_member_info_cleaned
+SET martial_status = 'unknown'
+WHERE martial_status IS NULL
+   OR TRIM(martial_status) = '';
+```
+
+```sql
+SELECT DISTINCT martial_status
+FROM club_member_info_cleaned;
+```
+
+### Email
+
+```sql
+SELECT email
+FROM club_member_info_cleaned
+WHERE email IS NULL OR TRIM(email) = '';
+```
+
+```sql
+UPDATE club_member_info_cleaned
+SET email = 'unknown'
+WHERE email IS NULL
+   OR TRIM(email) = '';
+```
+
+```sql
+SELECT email
+FROM club_member_info_cleaned
+WHERE email = 'unknown'
+LIMIT 10;
+```
+
+### Remove duplicates
+
+```sql
+SELECT DISTINCT martial_status
+FROM club_member_info_cleaned;SELECT full_name, email, age, martial_status, COUNT(*) as cnt
+FROM club_member_info_cleaned
+GROUP BY full_name, email, age, martial_status
+HAVING COUNT(*) > 1;
+```
+
+```sql
+DELETE FROM club_member_info_cleaned
+WHERE rowid NOT IN (
+    SELECT MIN(rowid)
+    FROM club_member_info_cleaned
+    GROUP BY full_name, email, age, martial_status
+);
+```
+
+```sql
+SELECT full_name, email, age, martial_status, COUNT(*) as cnt
+FROM club_member_info_cleaned
+GROUP BY full_name, email, age, martial_status
+HAVING COUNT(*) > 1;
+```
