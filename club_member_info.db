@@ -1,0 +1,117 @@
+SELECT * FROM club_member_info_ LIMIT 10;
+
+-- club_member_info definition
+
+CREATE TABLE club_member_info_cleaned (
+	full_name VARCHAR(50),
+	age INTEGER,
+	martial_status VARCHAR(50),
+	email VARCHAR(50),
+	phone NVARCHAR(50),
+	full_address NVARCHAR(50),
+	job_title VARCHAR(50),
+	membership_date NVARCHAR(50)
+);
+
+INSERT INTO club_member_info_cleaned
+SELECT *
+FROM club_member_info;
+
+SELECT TRIM(full_name)
+FROM club_member_info_cleaned cmic;
+
+UPDATE club_member_info_cleaned
+SET full_name = TRIM(full_name);
+
+SELECT  full_name
+FROM club_member_info_cleaned 
+LIMIT 10;
+
+SELECT UPPER(full_name)
+FROM club_member_info_cleaned
+
+UPDATE club_member_info_cleaned
+SET full_name = UPPER(full_name)
+
+SELECT DISTINCT age
+FROM club_member_info_cleaned cmic
+ORDER BY age
+
+SELECT CAST(SUBSTR(age, 1, 2) AS INTEGER)
+FROM club_member_info_cleaned
+WHERE age > 100
+AND age <> ''
+ORDER BY age
+
+UPDATE club_member_info_cleaned
+SET age = CAST(SUBSTR(age, 1, 2) AS INTEGER)
+WHERE age > 100 and age <> ''
+
+SELECT ROUND(AVG(age),0)
+FROM club_member_info_cleaned
+
+SELECT age
+FROM club_member_info_cleaned
+WHERE age = ''
+ORDER BY age
+
+UPDATE club_member_info_cleaned
+SET age = (SELECT ROUND(AVG(age),0)
+FROM club_member_info_cleaned)
+WHERE age = ''
+
+UPDATE club_member_info_cleaned
+SET age = (
+    SELECT ROUND(AVG(age))
+    FROM club_member_info_cleaned
+    WHERE age BETWEEN 0 AND 100
+)
+WHERE age IS NULL
+   OR age < 0
+   OR age > 100;
+
+SELECT MIN(age), MAX(age)
+FROM club_member_info_cleaned;
+
+SELECT DISTINCT martial_status
+FROM club_member_info_cleaned;
+
+UPDATE club_member_info_cleaned
+SET martial_status = 'unknown'
+WHERE martial_status IS NULL
+   OR TRIM(martial_status) = '';
+
+SELECT DISTINCT martial_status
+FROM club_member_info_cleaned;
+
+SELECT email
+FROM club_member_info_cleaned
+WHERE email IS NULL OR TRIM(email) = '';
+
+UPDATE club_member_info_cleaned
+SET email = 'unknown'
+WHERE email IS NULL
+   OR TRIM(email) = '';
+
+SELECT email
+FROM club_member_info_cleaned
+WHERE email = 'unknown'
+LIMIT 10;
+
+SELECT DISTINCT martial_status
+FROM club_member_info_cleaned;SELECT full_name, email, age, martial_status, COUNT(*) as cnt
+FROM club_member_info_cleaned
+GROUP BY full_name, email, age, martial_status
+HAVING COUNT(*) > 1;
+
+DELETE FROM club_member_info_cleaned
+WHERE rowid NOT IN (
+    SELECT MIN(rowid)
+    FROM club_member_info_cleaned
+    GROUP BY full_name, email, age, martial_status
+);
+
+SELECT full_name, email, age, martial_status, COUNT(*) as cnt
+FROM club_member_info_cleaned
+GROUP BY full_name, email, age, martial_status
+HAVING COUNT(*) > 1;
