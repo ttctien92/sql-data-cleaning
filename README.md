@@ -51,3 +51,27 @@ CREATE TABLE club_member_info_cleaned (
 INSERT INTO club_member_info_cleaned
 SELECT * FROM club_member_info;
 ```
+
+## Clean data
+### Full Name
+#### Trim whitespace
+
+```sql
+UPDATE club_member_info_cleaned
+SET full_name = TRIM(full_name)
+```
+
+Result:
+|full_name|
+|---------|
+|addie lush|
+|ROCK CRADICK|
+|Sydel Sharvell|
+|Constantin de la cruz|
+|Gaylor Redhole|
+|Wanda del mar|
+|Joann Kenealy|
+|Joete Cudiff|
+|mendie alexandrescu|
+|fey kloss|
+
